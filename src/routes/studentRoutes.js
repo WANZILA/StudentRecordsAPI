@@ -1,5 +1,5 @@
-/* eslint-disable quotes */
 /* eslint-disable linebreak-style */
+const bodyParser = require('body-parser');
 const express = require('express');
 const debug = require('debug')('app:studentRoutes');
 
@@ -33,7 +33,7 @@ function studentRouters(nav, title, pool) {
           if (err) {
             res.json(err);
           } else {
-            // debug(result);           
+            // debug(result);
             return res.render(
               'studentsListView',
               {
@@ -47,77 +47,97 @@ function studentRouters(nav, title, pool) {
     });
 
   studentRouter.route('/:studentid')
-    .get((req, res) => {
+    .all((req, res, next) => {
       // using object destructuring
       const stu = req.params.studentid;
       const studentId = decodeURIComponent(stu);
       // sample of encodeing and decording
       // console.log(encodeURIComponent(studentId));
-      // console.log(decodeURIComponent(studentId));
-
-      // const studentId = connection.escape(stu);
-
-      // debug(studentId);
-      //const sql = `select * from students where studentId = ` + `${studentId}`;
-      // const sql = `select * from students where studentId = "22A18/CCM" `;  //studentdetails
-      // const sql = 'select * from students limit 2';
-
       pool.query('select * from students where studentId = ?',
         [`${studentId}`],
         (err, result) => {
           if (err) {
             res.json(err);
           } else {
-            debug(result);
-            // console.log(result);
-            return res.send(result);
             // debug(result);
+            // console.log(result);
+            if (result) {
+              req.student = result;
+              return next();
+            }
+            // when not found
+            return res.sendStatus(404);
           }
         });
+    })
+    .get((req, res) => {
+      res.json(req.student);
+    })
+    .patch((req, res) => {
+      const { student } = req;
 
-      // pool.query('select * from students where studentId = ?',
-      //     [`${studentId}`],
-      //   (err, result) => {
-      //     if (err) {
-      //       res.json(err);
-      //     } else {
-      //       debug(result);
-      //       console.log(result);
-      //       return res.render(
-      //         'studentDetails',
-      //         {
-      //           nav,
-      //           title,
-      //           studentNav,
-      //           student: result[studentId]
-      //         }
-      //       );
-      //       // debug(result);
-      //     }
-      //   });
+      // no update of studentId
+      if (req.body.studentId) {
+        delete req.body.studentId;
+      }
 
-      // pool.query(sql,
-      //   (err, result) => {
-      //     if (err) {
-      //       res.json(err);
-      //     } else {
-      //       debug(result);
-      //       console.log(result);
-
-      //       return res.render(
-      //         'studentDetails',
-      //         {
-      //           nav,
-      //           title,
-      //           studentNav,
-      //           student: result[studentId]
-      //         }
-      //       );
-      //     }
-      //   });
-
-
+      Object.entries(req.body).forEach((item) => {
+        const key = item[0];
+        const value = item[1];
+        // for each key update it with the value
+        student[key] = value;
+      });
+      req.body.student.save((err) => {
+        if (err) {
+          return res.send(err);
+        }
+        return res.json(student);
+      });
     });
+
+  // pool.query('select * from students where studentId = ?',
+  //     [`${studentId}`],
+  //   (err, result) => {
+  //     if (err) {
+  //       res.json(err);
+  //     } else {
+  //       debug(result);
+  //       console.log(result);
+  //       return res.render(
+  //         'studentDetails',
+  //         {
+  //           nav,
+  //           title,
+  //           studentNav,
+  //           student: result[studentId]
+  //         }
+  //       );
+  //       // debug(result);
+  //     }
+  //   });
+
+  // pool.query(sql,
+  //   (err, result) => {
+  //     if (err) {
+  //       res.json(err);
+  //     } else {
+  //       debug(result);
+  //       console.log(result);
+
+  //       return res.render(
+  //         'studentDetails',
+  //         {
+  //           nav,
+  //           title,
+  //           studentNav,
+  //           student: result[studentId]
+  //         }
+  //       );
+  //     }
+  //   });
+
+
+
   return studentRouter;
 }
 module.exports = studentRouters;

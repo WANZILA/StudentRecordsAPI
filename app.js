@@ -2,7 +2,7 @@ const express = require('express');
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
+
 // const expressSanitized = require('express-sanitize-escape');
 const cors = require('cors');
 
@@ -50,10 +50,6 @@ const nav = [
   { link: '/report', title: 'Report' }
 ];
 
-app.use((req, res, next) =>{
-  debug('my middleware');
-  next();
-})
 const title = { title: 'Student Records System' };
 const studentRouter = require('./src/routes/studentRoutes')(nav, title, pool);
 
