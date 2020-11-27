@@ -2,14 +2,11 @@ const express = require('express');
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
-
-// const expressSanitized = require('express-sanitize-escape');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const mysql = require('mysql');
-//  const path = require('path');
 
-
+// custome variables
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -53,10 +50,13 @@ const nav = [
 const title = { title: 'Student Records System' };
 const studentRouter = require('./src/routes/studentRoutes')(nav, title, pool);
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(expressSanitized());
 app.use(cors());
+// making use of bodyParser
+app.use(bodyParser.urlencoded({ extended: true }));
+// pulls json out of the post body and gives us the data
+app.use(bodyParser.json());
+// app.use(expressSanitized());
+
 
 app.use(morgan('tiny'));
 app.set('views', './src/views');
