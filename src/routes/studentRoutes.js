@@ -13,19 +13,6 @@ const studentNav = [
 ];
 
 function studentRouters(nav, title, pool) {
-  // const studentsdb = [
-  //   {
-  //     fname: 'wano',
-  //     lname: 'wawa',
-  //     studentId: '121212'
-  //   },
-  //   {
-  //     fname: 'ror',
-  //     lname: 'wana',
-  //     studentId: '121312'
-  //   }
-  // ];
-
   studentRouter.route('/')
     .post((req, res) => {
       let sql = `INSERT INTO students( studentId ,
@@ -137,11 +124,53 @@ function studentRouters(nav, title, pool) {
       // using postman
       res.send(req.student);
     })
-    .delete((req, res) => {
-
+    .patch((req, res) => {
+      // geting the selected student from the .all middleware
+      // Object destructuring
       const stu = req.params.studentid;
       const studentId = decodeURIComponent(stu);
-      // const {studentId} = req.student;
+
+      const sql = `Update students SET 
+      fname = '${req.body.fname}',
+      mName = '${req.body.mName}',
+      lname = '${req.body.lname}',
+      title = '${req.body.title}',
+      birthDate = '${req.body.birthDate}',
+      gender = '${req.body.gender}',
+      maritalStatus = '${req.body.maritalStatus}',
+      children = '${req.body.children}',
+      branchNum = '${req.body.branchNum}',
+      localAddress1 = '${req.body.localAddress1}',
+      localAddress2 = '${req.body.localAddress2}',
+      phoneAddress1 = '${req.body.phoneAddress1}',
+      phoneAddress2 = '${req.body.phoneAddress2}',
+      emailAddress = '${req.body.emailAddress}',
+      intakeDate = '${req.body.intakeDate}',
+      EntryLevel = '${req.body.EntryLevel}',
+      studentStatus = '${req.body.studentStatus}',
+      adminId = '${req.body.adminId}',
+      courseCode = '${req.body.courseCode}',
+      password = '${req.body.password}'
+      WHERE studentId =?`;
+
+      pool.query(sql,
+        [`${studentId}`],
+        (err, result) => {
+          if (err) {
+            res.json(err);
+          }
+          else {
+            // console.log(studentId);
+            res.send('updated');
+            debug(result);
+          }
+        });
+    })
+    .delete((req, res) => {
+      const stu = req.params.studentid;
+      const studentId = decodeURIComponent(stu);
+      // eslint-disable-next-line prefer-destructuring
+      // const studentId = req.student.studentId;
       pool.query('DELETE from students WHERE studentId=?',
         [`${studentId}`],
         (err, result) => {
