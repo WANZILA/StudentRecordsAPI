@@ -73,25 +73,17 @@ function studentRouters(nav, title, pool) {
         req.body.courseCode,
         req.body.password
       ];
-      
-        pool.query(sql,
-          [values],
-          (err, result) => {
-            if (err) {
-              res.json(err);
-            } else {
-              res.send(result);
-            }
-          });
 
-
-        // pool.query(sql, [req.body.studentId,req.body.fname, req.body.mName], (err, result, fields) => {
-        //   if (err) throw err;
-        //   res.send(result);
-        // });
-
-        //return res.json(result);
-    
+      pool.query(sql,
+        [values],
+        (err, result) => {
+          if (err) {
+            res.json(err);
+          } else {
+            res.send(result);
+            // return res.json(result);
+          }
+        });
     })
     .get((req, res) => {
       const sql = 'select * from students';
@@ -118,11 +110,9 @@ function studentRouters(nav, title, pool) {
 
   studentRouter.route('/:studentid')
     .all((req, res, next) => {
-
       // sample id = A18%2FCCM%2F08
       const stu = req.params.studentid;
       const studentId = decodeURIComponent(stu);
-
       // sample of encoding and decording
       // console.log(encodeURIComponent(studentId));
       pool.query('select * from students where studentId = ?',
@@ -144,9 +134,26 @@ function studentRouters(nav, title, pool) {
     })
     .get((req, res) => {
       // res.json(req.student);
-
       // using postman
       res.send(req.student);
+    })
+    .delete((req, res) => {
+
+      const stu = req.params.studentid;
+      const studentId = decodeURIComponent(stu);
+      // const {studentId} = req.student;
+      pool.query('DELETE from students WHERE studentId=?',
+        [`${studentId}`],
+        (err, result) => {
+          if (err) {
+            res.json(err);
+          }
+          else {
+            console.log(studentId);
+            res.send('deleted');
+            debug(result);
+          }
+        });
     });
 
   return studentRouter;
