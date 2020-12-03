@@ -151,7 +151,9 @@ function studentsController(pool) {
         }
       });
   }
-  return { alls, post, get, patch, del };
+  return {
+    alls, post, get, patch, del
+  };
 }
 
 module.exports = studentsController;

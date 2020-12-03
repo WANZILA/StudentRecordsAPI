@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 // const bodyParser = require('body-parser');
 const express = require('express');
-const debug = require('debug')('app:studentRoutes');
+// const debug = require('debug')('app:studentRoutes');
 // const mysql = require('mysql');
 
 // just returns the studentsController fn 
@@ -16,7 +16,7 @@ const studentsController = require('../controller/studentsController');
 function studentRouters(nav, title, pool) {
   const studentRouter = express.Router();
   const controller = studentsController(pool);
-  // cstudentsController(pool)
+ 
   studentRouter.route('/')
     .post(controller.post)
     .get(controller.get);

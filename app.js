@@ -49,6 +49,8 @@ const nav = [
 
 const title = { title: 'Student Records System' };
 const studentRouter = require('./src/routes/studentRoutes')(nav, title, pool);
+const adminRouter = require('./src/routes/adminRoutes')();
+
 
 app.use(cors());
 // making use of bodyParser
@@ -57,24 +59,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // app.use(expressSanitized());
 
-
 app.use(morgan('tiny'));
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
-homeRouter.route('/home')
-  .get((req, res) => {
-    res.send('hellow people');
-  });
+// homeRouter.route('/home')
+//   .get((req, res) => {
+//     res.send('hellow people');
+//   });
 
-registryRouter.route('/registry')
-  .get((req, res) => {
-    res.send('reg hellow');
-  });
+// registryRouter.route('/registry')
+//   .get((req, res) => {
+//     res.send('reg hellow');
+//   });
 
-app.use('/', homeRouter);
-app.use('/', registryRouter);
+// app.use('/', homeRouter);
+// app.use('/', registryRouter);
 app.use('/student', studentRouter);
+app.use('/admin', adminRouter);
 
 app.get('/', (req, res) => {
   // res.send('hellow');
