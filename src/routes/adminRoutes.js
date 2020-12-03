@@ -11,6 +11,17 @@ function adminRouters() {
     // .post(controller.post)
     .get(controller.get);
 
+  adminRouter.route('/add')
+    .post(controller.post);
+
+  adminRouter.route('/:adminId')
+    .all(controller.alls)
+    .get((req, res) => {
+      res.send(req.admin);
+    })
+    .patch(controller.patch)
+    .delete(controller.deletes);
+
   return adminRouter;
 }
 module.exports = adminRouters;
