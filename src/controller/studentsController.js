@@ -1,14 +1,15 @@
 /* eslint-disable linebreak-style */
 const debug = require('debug')('app:studentController');
+const db = require('../../db');
 
-function studentsController(pool) {
+function studentsController() {
   function alls(req, res, next) {
     // sample id = A18%2FCCM%2F08
     const stu = req.params.studentid;
     const studentId = decodeURIComponent(stu);
     // sample of encoding and decording
     // console.log(encodeURIComponent(studentId));
-    pool.query('select * from students where studentId = ?',
+    db.query('select * from students where studentId = ?',
       [`${studentId}`],
       (err, result) => {
         if (err) {
@@ -72,7 +73,7 @@ function studentsController(pool) {
       req.body.password
     ];
 
-    pool.query(sql,
+    db.query(sql,
       [values],
       (err, result) => {
         if (err) {
@@ -84,7 +85,7 @@ function studentsController(pool) {
   }
   function get(req, res) {
     const sql = 'select * from students';
-    pool.query(sql,
+    db.query(sql,
       (err, result) => {
         if (err) {
           return res.json(err);
@@ -121,7 +122,7 @@ function studentsController(pool) {
     password = '${req.body.password}'
     WHERE studentId =?`;
 
-    pool.query(sql,
+    db.query(sql,
       [`${studentId}`],
       (err, result) => {
         if (err) {
@@ -138,7 +139,7 @@ function studentsController(pool) {
     const stu = req.params.studentid;
     const studentId = decodeURIComponent(stu);
     // const studentId = req.student.studentId;
-    pool.query('DELETE from students WHERE studentId=?',
+    db.query('DELETE from students WHERE studentId=?',
       [`${studentId}`],
       (err, result) => {
         if (err) {

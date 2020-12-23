@@ -15,11 +15,13 @@ const studentsController = require('../controller/studentsController');
 
 function studentRouters(nav, title, pool) {
   const studentRouter = express.Router();
-  const controller = studentsController(pool);
- 
+  const controller = studentsController();
+
   studentRouter.route('/')
-    .post(controller.post)
     .get(controller.get);
+
+  studentRouter.route('/add')
+    .post(controller.post);
 
   studentRouter.route('/:studentid')
     .all(controller.alls)

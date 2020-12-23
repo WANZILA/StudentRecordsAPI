@@ -4,7 +4,6 @@ const db = require('../../db');
 function adminsController() {
   function get(req, res) {
     const sql = 'select * from admins';
-
     db.query(sql,
       (err, result) => {
         if (err) { res.send(err); }
@@ -86,12 +85,12 @@ function adminsController() {
         return next();
       });
   }
-
+  // %96
   // function single(req, res, next) {
   //   const admin = req.params.adminId;
   //   const adminid = decodeURIComponent(admin);
   //   req.adminid = adminid;
-  //   return next();
+  // 1325-1622-7802-8689-1515-2706  return next();
   // }
 
   // updating the admins

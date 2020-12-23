@@ -13,25 +13,6 @@ const port = process.env.PORT || 3000;
 const homeRouter = express.Router();
 const registryRouter = express.Router();
 
-// db connections
-const pool = mysql.createPool({
-  connectionLimit: 100,
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  // server: 'localhost',
-  database: 'studentRecords',
-  flags: '+IGNORE_SPACE'
-});
-
-// testing connection
-// eslint-disable-next-line prefer-arrow-callback
-pool.query('SELECT 1 + 1 AS solution', function qns(error, results, fields) {
-  if (error) {
-    return debug(error);
-  };
-  console.log('connected ');
-});
 
 // main navigation
 const nav = [
@@ -48,8 +29,10 @@ const nav = [
 ];
 
 const title = { title: 'Student Records System' };
-const studentRouter = require('./src/routes/studentRoutes')(nav, title, pool);
+const studentRouter = require('./src/routes/studentRoutes')(nav, title);
 const adminRouter = require('./src/routes/adminRoutes')();
+const intakeRouter = require('./src/routes/intakeRoutes')();
+const structureRouter = require('./src/routes/structureRoutes')();
 
 
 app.use(cors());
@@ -77,6 +60,8 @@ app.set('view engine', 'ejs');
 // app.use('/', registryRouter);
 app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
+app.use('/intake', intakeRouter);
+app.use('/structure', structureRouter);
 
 app.get('/', (req, res) => {
   // res.send('hellow');
