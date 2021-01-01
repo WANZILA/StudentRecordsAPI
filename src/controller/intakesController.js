@@ -44,7 +44,8 @@ function intakesController() {
     // const intakedate = `${intake}`;
     // decodeURIComponent(2020%9612%9604)
 
-    const intakedate = decodeURIComponent(intakes);
+    // const intakedate = decodeURIComponent(intakes);
+    const intakedate = escape(intakes);
 
     db.query('select TO_DATE(intakeDate) from intakes WHERE intakeDate =?',
       [`${intakedate}`],
@@ -61,7 +62,7 @@ function intakesController() {
 
   function patch(req, res) {
     const intake = req.params.intakeDate;
-    const intakedate = decodeURIComponent(intake);
+    // const intakedate = decodeURIComponent(intake);
     // ONLY update intake name 
     const sql = `UPDATE intakes SET 
     intakeName = '${req.body.intakeName}',

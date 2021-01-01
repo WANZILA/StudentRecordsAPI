@@ -33,6 +33,7 @@ const studentRouter = require('./src/routes/studentRoutes')(nav, title);
 const adminRouter = require('./src/routes/adminRoutes')();
 const intakeRouter = require('./src/routes/intakeRoutes')();
 const structureRouter = require('./src/routes/structureRoutes')();
+const regeistrarRouter = require('./src/routes/registrarRoutes')();
 
 
 app.use(cors());
@@ -62,6 +63,7 @@ app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
 app.use('/intake', intakeRouter);
 app.use('/structure', structureRouter);
+app.use('/registrar', regeistrarRouter);
 
 app.get('/', (req, res) => {
   // res.send('hellow');
