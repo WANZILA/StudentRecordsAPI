@@ -33,8 +33,8 @@ const studentRouter = require('./src/routes/studentRoutes')(nav, title);
 const adminRouter = require('./src/routes/adminRoutes')();
 const intakeRouter = require('./src/routes/intakeRoutes')();
 const structureRouter = require('./src/routes/structureRoutes')();
-const regeistrarRouter = require('./src/routes/registrarRoutes')();
-
+const registrarRouter = require('./src/routes/registrarRoutes')();
+const reportRouter = require('./src/routes/reportRoutes')();
 
 app.use(cors());
 // making use of bodyParser
@@ -63,7 +63,8 @@ app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
 app.use('/intake', intakeRouter);
 app.use('/structure', structureRouter);
-app.use('/registrar', regeistrarRouter);
+app.use('/registrar', registrarRouter);
+app.use('/report', reportRouter);
 
 app.get('/', (req, res) => {
   // res.send('hellow');

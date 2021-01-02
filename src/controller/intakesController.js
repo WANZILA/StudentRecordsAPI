@@ -42,10 +42,7 @@ function intakesController() {
     const intakes = req.params.intakeDate;
     debug(intakes);
     // const intakedate = `${intake}`;
-    // decodeURIComponent(2020%9612%9604)
-
-    // const intakedate = decodeURIComponent(intakes);
-    const intakedate = escape(intakes);
+ r
 
     db.query('select TO_DATE(intakeDate) from intakes WHERE intakeDate =?',
       [`${intakedate}`],
