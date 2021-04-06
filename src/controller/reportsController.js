@@ -90,7 +90,7 @@ function routerController() {
       [`${coursecode}`, `${courseunitcode}`, `${semesterdatecode}`],
       (err, result) => {
         if (err) { res.send(err); }
-        debug( coursecode, courseunitcode, semesterdatecode);
+        debug(coursecode, courseunitcode, semesterdatecode);
         return res.send(result);
       });
   }
@@ -115,7 +115,7 @@ function routerController() {
       [`${coursecode}`, `${coursecode2}`, `${courseunitcode}`, `${semesterdatecode}`],
       (err, result) => {
         if (err) { res.send(err); }
-        debug( coursecode, courseunitcode, semesterdatecode);
+        debug(coursecode, courseunitcode, semesterdatecode);
         return res.send(result);
       });
   }
@@ -167,8 +167,8 @@ function routerController() {
         debug(coursecode, semesterdatecode);
         return res.send(result);
       });
-  } 
-  
+  }
+
   // course report
   // '/coursereport/coursecode/:courseCode/semesterdatecode/:semesterDateCode')
   function getAllStudentCourseReports(req, res) {
@@ -189,7 +189,7 @@ function routerController() {
         debug(coursecode, semesterdatecode);
         return res.send(result);
       });
-  } 
+  }
 
   // coursereport/coursecode/:courseCode/coursecode2/:courseCode2/semesterdatecode/:semesterDateCode
   function getAllStudentCourseReportsBothProgrammes(req, res) {
@@ -211,7 +211,7 @@ function routerController() {
         return res.send(result);
       });
   }
-  
+
   // semester report
   // getAllSemesterStudentReports
   function getAllSemesterStudentReports(req, res) {
@@ -231,9 +231,9 @@ function routerController() {
         debug(semesterdatecode);
         return res.send(result);
       });
-  } 
-  
-  
+  }
+
+
   function getStudentAllSemestersReports(req, res) {
     const coursecode = req.params.courseCode;
     const stud = req.params.studentId;
@@ -253,7 +253,7 @@ function routerController() {
       [`${coursecode}`, `${studentid}`],
       (err, result) => {
         if (err) { res.send(err); }
-        debug(coursecode, studentid );
+        debug(coursecode, studentid);
         return res.send(result);
       });
   }

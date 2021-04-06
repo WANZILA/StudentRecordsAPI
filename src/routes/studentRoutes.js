@@ -23,16 +23,15 @@ function studentRouters(nav, title, pool) {
   studentRouter.route('/add')
     .post(controller.post);
 
-  studentRouter.route('/:studentid')
+  studentRouter.route('/:studentId')
     .all(controller.alls)
     .get((req, res) => {
       // res.json(req.student);
       // using postman
       res.send(req.student);
     })
-    .patch(controller.patch)
+    .put(controller.updateStudent)
     .delete(controller.del);
-
   return studentRouter;
 }
 module.exports = studentRouters;

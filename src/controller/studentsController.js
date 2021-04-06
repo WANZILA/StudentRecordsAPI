@@ -5,21 +5,38 @@ const db = require('../../db');
 function studentsController() {
   function alls(req, res, next) {
     // sample id = A18%2FCCM%2F08
-    const stu = req.params.studentid;
-    const studentId = decodeURIComponent(stu);
+    // id exists = 00000010004
+    const stu = req.params.studentId;
+
+    // const stu = 'A18%2FCCM%2F08';
+    debug(stu);
+
+    // const stu1 = encodeURIComponent(stu);
+    // const stu2 = stu.replace('%7D', ' ');
+    // const stu1 = stu.replace('%2F', '/');
+    // const studentid = stu1.replace('%2F', '/');
+
+
+    // const studentid = decodeURIComponent(`${stu}`);
+    const studentid = decodeURIComponent(stu);
     // sample of encoding and decording
     // console.log(encodeURIComponent(studentId));
-    db.query('select * from students where studentId = ?',
-      [`${studentId}`],
+    debug(studentid);
+    //  ORDER BY  CAST(intakeDate as DATE(intakeDate))
+    const sql = 'select * from students where studentId = ?';
+
+    db.query(sql,
+      [`${studentid}`],
       (err, result) => {
         if (err) {
           res.json(err);
         } else {
           debug(result);
-          // console.log(result);
+          debug(studentid);
           if (result) {
             req.student = result;
             return next();
+            // return res.send(result);
           }
           // when not found
           return res.sendStatus(404);
@@ -27,54 +44,103 @@ function studentsController() {
       });
   }
   function post(req, res) {
-    let sql = `INSERT INTO students( studentId ,
-    fname ,
-    mName ,
-    lname ,
-    title ,
+    const sql = `INSERT INTO students 
+    (studentId,
+    fname,
+    mname,
+    lname,
+    title,
     birthDate,
-    gender ,
+    gender,
     maritalStatus,
-    children ,
-    branchNum ,
-    localAddress1 ,
-    localAddress2 ,
-    phoneAddress1 ,
-    phoneAddress2 ,
-    emailAddress ,
-    IntakeDate ,
-    EntryLevel ,
-    studentStatus ,
-    adminId,
+    nation,
+    district,
+    county,
+    subCounty,
+    parish,
+    village,
+    phoneAddress1,
+    phoneAddress2,
+    emailAddress,
+    intakeDate,
+    branchNum,
+    studyprogramme,
     courseCode,
-    password) VALUES (?)`;
-
-    let values = [
+    studentStatus, 
+    educationLevel) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+    const values = [
       req.body.studentId,
       req.body.fname,
-      req.body.mName,
+      req.body.mname,
       req.body.lname,
       req.body.title,
       req.body.birthDate,
       req.body.gender,
       req.body.maritalStatus,
-      req.body.children,
-      req.body.branchNum,
-      req.body.localAddress1,
-      req.body.localAddress2,
+      req.body.nation,
+      req.body.district,
+      req.body.county,
+      req.body.subCounty,
+      req.body.parish,
+      req.body.village,
       req.body.phoneAddress1,
       req.body.phoneAddress2,
       req.body.emailAddress,
-      req.body.IntakeDate,
-      req.body.EntryLevel,
-      req.body.studentStatus,
-      req.body.adminId,
+      // req.body.educationLevel,
+      req.body.intakeDate,
+      req.body.branchNum,
+      req.body.studyprogramme,
       req.body.courseCode,
-      req.body.password
+      req.body.studentStatus,
+      req.body.educationLevel
+      //  req.body.passwords
     ];
 
-    db.query(sql,
-      [values],
+    // 'INSERT INTO employee SET ?
+    // const sql = `INSERT INTO students(studentId,fname)
+    //              VALUES (?,?)`;
+    // const reqs = req.body;
+    const stud = req.body.studentId;
+    debug(stud);
+    // const items = [
+    //   studentId,
+    //   fname
+    // ];
+    // const VAL = {
+    //   studentId: req.body.studentId,
+    //   fname: req.body.fname
+    // };
+    // const studId = req.body.studentId;
+    // debug(studId);
+    //  debug(VAL);
+    // const updates = {
+    //    req.body.studentId,
+    //    req.body.fname,
+    // mname: req.body.mname,
+    // lname: req.body.lname,
+    // title: req.body.title,
+    // birthDate: req.body.birthDate,
+    // gender: req.body.gender,
+    // maritalStatus: req.body.maritalStatus,
+    // nation: req.body.nation,
+    // district: req.body.district,
+    // county: req.body.county,
+    // subCounty: req.body.subCounty,
+    // parish: req.body.parish,
+    // village: req.body.village,
+    // phoneAddress1: req.body.phoneAddress1,
+    // phoneAddress2: req.body.phoneAddress2,
+    // emailAddress: req.body.emailAddress,
+    // educationLevel: req.body.educationLevel,
+    // // intakeDate: req.body.intakeDate,
+    // branchNum: req.body.branchNum,
+    // studyprogramme: req.body.studyprogramme,
+    // courseCode: req.body.courseCode,
+    // studentStatus: req.body.studentStatus,
+    // passwords: req.body.passwords
+    // };
+
+    db.query(sql, values,
       (err, result) => {
         if (err) {
           return res.json(err);
@@ -83,8 +149,9 @@ function studentsController() {
         // return res.json(result);
       });
   }
+
   function get(req, res) {
-    const sql = 'select * from students';
+    const sql = 'select studentId,fname,mname,lname from students ORDER BY intakeDate';
     db.query(sql,
       (err, result) => {
         if (err) {
@@ -93,44 +160,63 @@ function studentsController() {
         return res.send(result);
       });
   }
-  function patch(req, res) {
+
+  function updateStudent(req, res) {
     // geting the selected student from the .all middleware
     // Object destructuring
-    const stu = req.params.studentid;
+    const stu = req.params.studentId;
+    // const fna = req.body.fname;
+    // debug(fna);
     const studentId = decodeURIComponent(stu);
+    const updates = {
+      studentId: req.body.studentId,
+      fname: req.body.fname,
+      mname: req.body.mname,
+      lname: req.body.lname,
+      title: req.body.title,
+      birthDate: req.body.birthDate,
+      gender: req.body.gender,
+      maritalStatus: req.body.maritalStatus,
+      nation: req.body.nation,
+      district: req.body.district,
+      county: req.body.county,
+      subCounty: req.body.subCounty,
+      parish: req.body.parish,
+      village: req.body.village,
+      phoneAddress1: req.body.phoneAddress1,
+      phoneAddress2: req.body.phoneAddress2,
+      emailAddress: req.body.emailAddress,
+      educationLevel: req.body.educationLevel,
+      // intakeDate: req.body.intakeDate,
+      branchNum: req.body.branchNum,
+      studyprogramme: req.body.studyprogramme,
+      courseCode: req.body.courseCode,
+      studentStatus: req.body.studentStatus,
+      // passwords: req.body.passwords
+    };
+    // // children: req.body.children,
+    // // keenName: null ,
+    // // keenRelationship: null ,
+    // // keenPhone: 0 ,
+    // // keenEmail: null ,
+    // // keenAddress: null ,
+    // // specify: null ,
+    // // institutions: null ,
+    // // EntryLevel: req.body.EntryLevel,
+    // //  adminId: req.body.adminId,
+    //  debug(updates);
 
-    const sql = `Update students SET 
-    fname = '${req.body.fname}',
-    mName = '${req.body.mName}',
-    lname = '${req.body.lname}',
-    title = '${req.body.title}',
-    birthDate = '${req.body.birthDate}',
-    gender = '${req.body.gender}',
-    maritalStatus = '${req.body.maritalStatus}',
-    children = '${req.body.children}',
-    branchNum = '${req.body.branchNum}',
-    localAddress1 = '${req.body.localAddress1}',
-    localAddress2 = '${req.body.localAddress2}',
-    phoneAddress1 = '${req.body.phoneAddress1}',
-    phoneAddress2 = '${req.body.phoneAddress2}',
-    emailAddress = '${req.body.emailAddress}',
-    intakeDate = '${req.body.intakeDate}',
-    EntryLevel = '${req.body.EntryLevel}',
-    studentStatus = '${req.body.studentStatus}',
-    adminId = '${req.body.adminId}',
-    courseCode = '${req.body.courseCode}',
-    password = '${req.body.password}'
-    WHERE studentId =?`;
+    const sql = `Update students SET ? 
+                 WHERE studentId =?`;
 
     db.query(sql,
-      [`${studentId}`],
+      [updates, `${studentId}`],
       (err, result) => {
         if (err) {
           res.json(err);
         } else {
-          // console.log(studentId);
           res.send('updated');
-          //debug(result);
+          debug(result);
         }
       });
   }
@@ -139,13 +225,12 @@ function studentsController() {
     const stu = req.params.studentid;
     const studentId = decodeURIComponent(stu);
     // const studentId = req.student.studentId;
-    db.query('DELETE from students WHERE studentId=?',
+    db.query('DELETE from students WHERE studentId = ?',
       [`${studentId}`],
       (err, result) => {
         if (err) {
           res.json(err);
-        }
-        else {
+        } else {
           // console.log(studentId);
           res.send('deleted');
           debug(result);
@@ -153,7 +238,7 @@ function studentsController() {
       });
   }
   return {
-    alls, post, get, patch, del
+    alls, post, get, updateStudent, del
   };
 }
 

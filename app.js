@@ -1,19 +1,19 @@
+// import bodyParser from 'body-parser';
+
 const express = require('express');
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mysql = require('mysql');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const flash = require('connect-flash');
+// const passport = require('passport');
 
 // custome variables
 const app = express();
 const port = process.env.PORT || 3000;
-
-const homeRouter = express.Router();
-const registryRouter = express.Router();
-
-
 // main navigation
 const nav = [
   { link: '/home', title: 'Home' },
@@ -35,48 +35,44 @@ const intakeRouter = require('./src/routes/intakeRoutes')();
 const structureRouter = require('./src/routes/structureRoutes')();
 const registrarRouter = require('./src/routes/registrarRoutes')();
 const reportRouter = require('./src/routes/reportRoutes')();
-
-app.use(cors());
-// making use of bodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
-// pulls json out of the post body and gives us the data
-app.use(bodyParser.json());
-// app.use(expressSanitized());
+const adminLoginRouter = require('./src/routes/adminLoginRoutes');
 
 app.use(morgan('tiny'));
+app.use(cors());
+// pulls json out of the post body and gives us the data
+// app.use(bodyParser.json());
+// app.use(express.json());
+// making use of bodyParser
+ // app.use(bodyParser.urlencoded({ extended: true }));
+ app.use(express.raw());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(express.raw());
+app.use(cookieParser());
+// app.use(session({ secret: 'studentrecords' }));
+
+// sample
+app.use(session({
+  secret: 'studentrecords',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 15 }
+}));
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+app.use(flash());
+
+// require('./src/config/passport.js')(app);
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
-
-// homeRouter.route('/home')
-//   .get((req, res) => {
-//     res.send('hellow people');
-//   });
-
-// registryRouter.route('/registry')
-//   .get((req, res) => {
-//     res.send('reg hellow');
-//   });
-
-// app.use('/', homeRouter);
-// app.use('/', registryRouter);
 app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
 app.use('/intake', intakeRouter);
 app.use('/structure', structureRouter);
 app.use('/registrar', registrarRouter);
 app.use('/report', reportRouter);
-
-app.get('/', (req, res) => {
-  // res.send('hellow');
-  // res.sendFile(path.join(__dirname, 'views/index.html'));
-  res.render(
-    'index',
-    {
-      nav,
-      title: 'Student Records System'
-    }
-  );
-});
+app.use('/adminlogin', adminLoginRouter);
 
 app.listen(port, () => {
   debug(`Running on port ${chalk.green(port)}`);

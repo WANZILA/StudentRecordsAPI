@@ -57,7 +57,7 @@ function structuresController() {
     const sem = req.params.semesterDateCode;
     const semester = decodeURIComponent(sem);
     debug(semester);
-    const sql = 'SELECT * FROM semesterdates WHERE semesterDateCode =(?)';
+    const sql = 'SELECT * FROM semesterdates WHERE semesterDateCode LIKE "(?)"';
     // `${studentId}`
     db.query(sql,
       [`${semester}`],
@@ -375,12 +375,14 @@ function structuresController() {
   function addGrade(req, res) {
     const sql = `INSERT INTO grades(
                   gradeCode,
+                  gradeRange,
                   gradeScore,
                   adminId
                   ) VALUES (?)`;
     // rs on geting only initials of words for courseCode
     const values = [
       req.body.gradeCode,
+      req.body.gradeRange,
       req.body.gradeScore,
       req.body.adminId
     ];
