@@ -5,6 +5,15 @@ function structureRoutes() {
   const structureRouter = express.Router();
   const controller = structuresController;
 
+  // branches
+  structureRouter.route('/braches')
+    .get(controller.getAllBranches);
+
+  // intakes 
+  structureRouter.route('/intakes')
+    .get(controller.getAllIntakes);
+
+  // semesters
   structureRouter.route('/semesterdates')
     .get(controller.getAllSemesterDates);
 

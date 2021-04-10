@@ -3,6 +3,35 @@ const debug = require('debug')('app:structuresController');
 const db = require('../../db');
 
 function structuresController() {
+  /* **** branches  */
+  function getAllBranches(req, res) {
+    const sql = 'SELECT * FROM branches';
+
+    db.query(sql,
+      (err, result) => {
+        if (err) { res.send(err); }
+        return res.send(result);
+      });
+  }
+
+  /************ intakes **/
+
+  function getAllIntakes(req, res) {
+    // const sql = `SELECT intakeDate, YEAR(intakeDate) AS Year, MONTHName(intakeDate) as Month,
+    // intakeName, updateTimestamp 
+    // FROM intakes 
+    // intake ORDER BY intakeDate DESC`;
+
+    const sql = `SELECT intakeDate, intakeName FROM intakes
+                ORDER BY intakeDate DESC`;
+    db.query(sql,
+      (err, result) => {
+        if (err) { res.send(err); }
+        // debug(result);
+        return res.send(result);
+      });
+  }
+
   function getAllSemesterDates(req, res) {
     const sql = 'SELECT * FROM  semesterdates ORDER BY startDate DESC';
     db.query(sql,
@@ -506,6 +535,12 @@ function structuresController() {
   }
 
   return {
+    // branches
+    getAllBranches,
+
+    // intakes
+    getAllIntakes,
+
     // working on semesters
     getAllSemesterDates,
     addSemesterDate,

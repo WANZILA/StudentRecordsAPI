@@ -19,6 +19,9 @@ function studentRouters(nav, title, pool) {
 
   studentRouter.route('/')
     .get(controller.get);
+  
+  studentRouter.route('/intakedate/:intakeDate/branch/:branchNum/studyprogramme/:studyProgNum')
+    .get(controller.getIntakeBranchStudents);
 
   studentRouter.route('/add')
     .post(controller.post);

@@ -222,7 +222,7 @@ function studentsController() {
   }
 
   function del(req, res) {
-    const stu = req.params.studentid;
+    const stu = req.params.studentId;
     const studentId = decodeURIComponent(stu);
     // const studentId = req.student.studentId;
     db.query('DELETE from students WHERE studentId = ?',
