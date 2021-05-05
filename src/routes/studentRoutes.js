@@ -13,7 +13,7 @@ const studentsController = require('../controller/studentsController');
 //   { link: '/studentSearch', title: 'Search' }
 // ];
 
-function studentRouters(nav, title, pool) {
+function studentRouters() {
   const studentRouter = express.Router();
   const controller = studentsController();
 

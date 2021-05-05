@@ -6,7 +6,7 @@ function structureRoutes() {
   const controller = structuresController;
 
   // branches
-  structureRouter.route('/braches')
+  structureRouter.route('/branches')
     .get(controller.getAllBranches);
 
   // intakes 

@@ -15,8 +15,6 @@ function studentsController() {
     // const stu2 = stu.replace('%7D', ' ');
     // const stu1 = stu.replace('%2F', '/');
     // const studentid = stu1.replace('%2F', '/');
-
-
     // const studentid = decodeURIComponent(`${stu}`);
     const studentid = decodeURIComponent(stu);
     // sample of encoding and decording
