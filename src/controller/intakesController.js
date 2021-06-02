@@ -42,7 +42,7 @@ function intakesController() {
     const intakes = req.params.intakeDate;
     debug(intakes);
     // const intakedate = `${intake}`;
- r
+ 
 
     db.query('select TO_DATE(intakeDate) from intakes WHERE intakeDate =?',
       [`${intakedate}`],

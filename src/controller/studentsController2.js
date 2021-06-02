@@ -3,6 +3,16 @@ const db = require('../../db');
 // display all students
 exports.student_get_all = function getAllStudents(req, res) {
   const sql = 'select studentId,fname,mname,lname from students ORDER BY intakeDate DESC limit 10';
+  // const sql = `SELECT stud.studentId, stud.fname, stud.mname, stud.lname, stud.branchNum, 
+  //       intD.intakeDate, intD.intakeName, bra.branchName, bra.branchNum
+  //       FROM students stud, intakes intD, branches bra 
+  //       ORDER BY intakeDate DESC `;
+  //   const sql = `SELECT stud.studentId, stud.fname, stud.mname, stud.lname, stud.branchNum, 
+  // intD.intakeDate, intD.intakeName, bra.branchName, bra.branchNum
+  // FROM students stud, intakes intD, branches bra 
+  // WHERE (stud.intakeDate = intD.intakeDate ) 
+  //       && (stud.intakeDate = '2020/08/06') && (stud.branchNum = bra.branchNum) && (stud.studyprogramme='fulltime')
+  // ORDER BY intakeDate DESC `;
   db.query(sql,
     (err, result) => {
       if (err) {
@@ -12,7 +22,7 @@ exports.student_get_all = function getAllStudents(req, res) {
     });
 };
 
-// PTC%252FA2020%252F05
+// changes studentID PTC_A2020_05 to PTC/A2020/05
 exports.student_get_One = function getOneStudent(req, res) {
   const stu = req.params.studentId;
   // replace / with _
@@ -154,7 +164,7 @@ exports.student_update = function studentUpdate(req, res) {
   //  debug(updates);
 
   const sql = `Update students SET ? 
-                 WHERE studentId =?`;
+                 WHERE studentId = ?`;
 
   db.query(sql,
     [updates, `${studentId}`],

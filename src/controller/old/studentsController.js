@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 const debug = require('debug')('app:studentController');
-const db = require('../../db');
+const db = require('../../../db');
 
 function studentsController() {
   function alls(req, res, next) {

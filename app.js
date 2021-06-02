@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 // import bodyParser from 'body-parser';
 
 const express = require('express');
@@ -14,7 +15,9 @@ const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const studentRouter = require('./src/routes/routes');
+const studentRouter = require('./src/routes/studentRoutes');
+const adminRouter = require('./src/routes/adminRoutes');
+const structureRouter = require('./src/routes/structureRoutes');
 
 app.use(morgan('tiny'));
 app.use(cors(
@@ -36,7 +39,6 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-
 // sample
 app.use(session({
   secret: 'studentrecords',
@@ -54,9 +56,9 @@ app.use(session({
 
 // Date: 19/04/2021
 app.use('/student', studentRouter);
-// app.use('/admin', adminRouter);
+app.use('/admin', adminRouter);
 // app.use('/intake', intakeRouter);
-// app.use('/structure', structureRouter);
+app.use('/structure', structureRouter);
 // app.use('/registrar', registrarRouter);
 // app.use('/report', reportRouter);
 // app.use('/adminlogin', adminLoginRouter);
