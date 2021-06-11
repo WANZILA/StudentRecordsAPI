@@ -18,6 +18,7 @@ const port = process.env.PORT || 3000;
 const studentRouter = require('./src/routes/studentRoutes');
 const adminRouter = require('./src/routes/adminRoutes');
 const structureRouter = require('./src/routes/structureRoutes');
+const registrarRouter = require('./src/routes/registrarRoutes');
 
 app.use(morgan('tiny'));
 app.use(cors(
@@ -59,7 +60,7 @@ app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
 // app.use('/intake', intakeRouter);
 app.use('/structure', structureRouter);
-// app.use('/registrar', registrarRouter);
+app.use('/registrar', registrarRouter);
 // app.use('/report', reportRouter);
 // app.use('/adminlogin', adminLoginRouter);
 // app.listen(port, () => {
