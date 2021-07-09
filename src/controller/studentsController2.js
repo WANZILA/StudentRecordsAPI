@@ -11,7 +11,7 @@ exports.student_get_all = function getAllStudents(req, res) {
   // intD.intakeDate, intD.intakeName, bra.branchName, bra.branchNum
   // FROM students stud, intakes intD, branches bra 
   // WHERE (stud.intakeDate = intD.intakeDate ) 
-  //       && (stud.intakeDate = '2020/08/06') && (stud.branchNum = bra.branchNum) && (stud.studyprogramme='fulltime')
+  //  && (stud.intakeDate = '2020/08/06') && (stud.branchNum = bra.branchNum) && (stud.studyprogramme='fulltime')
   // ORDER BY intakeDate DESC `;
   db.query(sql,
     (err, result) => {
@@ -22,6 +22,29 @@ exports.student_get_all = function getAllStudents(req, res) {
     });
 };
 
+// eslint-disable-next-line camelcase
+exports.student_get_all_Student_Intakes = function student_get_all_Student_Intakes(req, res) {
+  const intake = req.params.intakeDate;
+  const branch = req.params.branchNum;
+  const studyProg = req.params.studyProgramme;
+
+  debug('hi', intake, branch);
+
+  const sql = `select studentId,fname,mname,lname 
+               FROM students 
+               WHERE  intakeDate =?  && branchNum =? && studyProgramme =?
+               ORDER BY intakeDate DESC`;
+//  && studyProgramme =?
+// , `${branch}`
+  db.query(sql, [`${intake}`, `${branch}`, `${studyProg}`],
+    (err, result) => {
+      if (err) {
+        return res.json(err);
+      }
+      debug(result);
+      return res.send(result);
+    });
+};
 // changes studentID PTC_A2020_05 to PTC/A2020/05
 exports.student_get_One = function getOneStudent(req, res) {
   const stu = req.params.studentId;
@@ -54,6 +77,27 @@ exports.student_get_One = function getOneStudent(req, res) {
     });
 };
 
+// used in reg module of  front end
+// eslint-disable-next-line camelcase
+exports.get_all_StudyProgrammes = function get_all_StudyProgrammes(req, res) {
+  const sql = 'select distinct studyProgramme from students';
+
+  db.query(sql,
+    (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        debug(result);
+        if (result) {
+          req.studyprogramme = result;
+          // return next();
+          return res.send(result);
+        }
+        // when not found
+        return res.sendStatus(404);
+      }
+    });
+};
 exports.student_post = function studentAdd(req, res) {
   const sql = `INSERT INTO students 
     (studentId,
@@ -121,7 +165,7 @@ exports.student_update = function studentUpdate(req, res) {
   // If any errors on update its because of  intakedates and birhtday dates
   const stu = req.params.studentId;
   // const stud = decodeURIComponent(stu);
- //  console.log(stud);
+  //  console.log(stud);
   const stu1 = stu.replace('_', '/');
   const stu2 = stu1.replace('_', '/');
   const studentId = stu2.replace('_', '/');
@@ -179,7 +223,6 @@ exports.student_update = function studentUpdate(req, res) {
 };
 
 exports.student_delete = function studentDelete(req, res) {
-  
   const stu = req.params.studentId;
   const stu1 = stu.replace('_', '/');
   const stu2 = stu1.replace('_', '/');

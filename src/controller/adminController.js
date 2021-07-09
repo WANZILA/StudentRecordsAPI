@@ -1,6 +1,49 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable consistent-return */
 const debug = require('debug')('app:studentController');
 const db = require('../../db');
+
+exports.getAll = function getAll(req, res) {
+  const sql = `select adminId, fname, mname, lname 
+              FROM admins`;
+  db.query(sql,
+    (err, result) => {
+      if (err) {
+        return res.json(err);
+      }
+      return res.send(result);
+    });
+};
+
+exports.getSearchAdmins = function getSearchAdmins(req, res) {
+  const departCode = req.params.departCode;
+  const branchNum = req.params.branchNum;
+
+  const sql = `select adminId, title, fname, lname 
+              FROM admins
+              WHERE departCode= ?
+              && branchNum = ? `;
+  db.query(sql, [`${departCode}`, `${branchNum}`],
+    (err, result) => {
+      if (err) {
+        return res.json(err);
+      }
+      return res.send(result);
+    });
+};
+
+// eslint-disable-next-line camelcase
+exports.getAllAdmins_Reg = function getAllAdmins_Reg(req, res) {
+  const sql = `select adminId, title, fname, lname 
+              FROM admins`;
+  db.query(sql,
+    (err, result) => {
+      if (err) {
+        return res.json(err);
+      }
+      return res.send(result);
+    });
+};
 
 exports.getAll = function getAll(req, res) {
   const sql = `select adminId, fname, mname, lname 

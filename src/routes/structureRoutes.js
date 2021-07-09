@@ -26,6 +26,16 @@ router.post('/semesterDates/add', controller.adds_SemesterDates);
 router.patch('/semesterDates/:semesterDateCode', controller.updates_SemesterDates);
 router.delete('/semesterDates/:semesterDateCode', controller.deletes_SemesterDates);
 
+// Branches
+router.get('/branches/', controller.getAll_Branches);
+// router.get('/departments/:departCode', controller.getSingle_Department);
+// router.post('/departments/add', controller.adds_Department);
+// router.patch('/departments/:departCode', controller.updates_Department);
+// router.delete('/departments/:departCode', controller.deletes_Department);
+
+// studyprogrammes
+router.get('/studyprogrammes/', controller.getAll_StudypPogrammes);
+
 // Departments
 router.get('/departments/', controller.getAll_Departments);
 router.get('/departments/:departCode', controller.getSingle_Department);
@@ -42,8 +52,11 @@ router.delete('/courses/:courseCode', controller.deletes_Course);
 
 
 // courseunit
-router.get('/courseunits/', controller.getAll_CourseUnits);
+// used to get all courseunits in a programme
+router.get('/courseunits/coursecode/:courseCode', controller.getAll_CourseUnits);
 router.get('/courseunits/:courseUnitCode', controller.getSingle_CourseUnit);
+// used to get courseunits for assigment in the registrar module 
+router.get('/courseunits/:courseCode/semesternum/:semesterNum', controller.get_CourseUnit_Reg);
 router.post('/courseunits/add', controller.adds_CourseUnit);
 router.patch('/courseunits/:courseUnitCode', controller.updates_CourseUnit);
 router.delete('/courseunits/:courseUnitCode', controller.deletes_CourseUnit);

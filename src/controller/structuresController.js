@@ -276,9 +276,111 @@ exports.deletes_SemesterDates = function deletes_SemesterDates(req, res) {
     });
 };
 
-// departments 
+
+// branches 
+exports.getAll_Branches = function getAll_Branches(req, res) {
+  const sql = 'SELECT * FROM branches';
+
+  db.query(sql,
+    (err, result) => {
+      if (err) { res.send(err); }
+      // debug(result);
+      return res.send(result);
+    });
+};
+
+// exports.getSingle_Department = function getSingle_Department(req, res) {
+//   const idFinal = req.params.departCode;
+//   debug(idFinal);
+//   // const intakedate = `${intake}`;
+
+//   db.query('SELECT * FROM departments WHERE departCode = ?',
+//     [`${idFinal}`],
+//     (err, result) => {
+//       if (err) { res.send(err); }
+//       debug(result);
+//       req.semester = result;
+//       return res.send(result);
+//       // return next();
+//     });
+// };
+
+// exports.adds_Department = function adds_Department(req, res) {
+//   const sql = `INSERT INTO departments(
+//     departCode,
+//     departName,
+//     description
+//     ) VALUES (?)`;
+//   // adminId
+//   const values = [
+//     req.body.departCode,
+//     req.body.departName,
+//     req.body.description
+//   ];
+
+//   db.query(sql,
+//     [values],
+//     (err, result) => {
+//       if (err) { res.send(err); }
+//       debug('result');
+//       return res.send(result);
+//     });
+// };
+
+// exports.updates_Department = function updates_Department(req, res) {
+//   const id = req.params.departCode;
+//   // const id1 = id.replace('_', '/');
+//   // const id2 = id1.replace('_', '/');
+//   // const idFinal = id2.replace('_', '/');
+//   const idFinal = id;
+
+//   const sql = `UPDATE departments SET ?
+//                WHERE departCode = ? `;
+//   const updates = {
+//     departName: req.body.departName,
+//     description: req.body.description
+//   };
+
+//   db.query(sql,
+//     [updates, `${idFinal}`],
+//     (err, result) => {
+//       if (err) { res.send(err); }
+//       debug(result);
+//       res.send(result);
+//     });
+// };
+
+// exports.deletes_Department = function deletes_Department(req, res) {
+//   const id = req.params.departCode;
+//   const idFinal = id;
+
+//   const sql = 'DELETE FROM departments WHERE departCode = ?';
+//   db.query(sql,
+//     [`${idFinal}`],
+//     (err, result) => {
+//       if (err) { res.send(err); }
+//       // eslint-disable-next-line quotes
+//       debug(result);
+//       res.send(result);
+
+//       // res.send(`${idFinal} deleted`);
+//     });
+// };
+
+// studyprogrammes
+exports.getAll_StudypPogrammes = function getAll_StudypPogrammes(req, res) {
+  const sql = 'SELECT * FROM studyprogrammes';
+  db.query(sql,
+    (err, result) => {
+      if (err) { res.send(err); }
+      // debug(result);
+      return res.send(result);
+    });
+};
+
+// department
 exports.getAll_Departments = function getAll_Departments(req, res) {
-  const sql = `SELECT * FROM departments`;
+  const sql = 'SELECT * FROM departments';
 
   db.query(sql,
     (err, result) => {
@@ -461,6 +563,7 @@ exports.deletes_Course = function deletes_Course(req, res) {
 
 // Course Unit
 exports.getAll_CourseUnits = function getAll_CourseUnits(req, res) {
+  const coursecode = req.params.courseCode;
   const sql = `SELECT 
                   courseCode,
                   semesterNum,
@@ -468,9 +571,10 @@ exports.getAll_CourseUnits = function getAll_CourseUnits(req, res) {
                   courseUnitName, 
                   creditHours
                 FROM courseunits
-                ORDER BY courseCode, semesterNum  DESC`;
-
-  db.query(sql,
+                WHERE courseCode = ?
+                ORDER BY courseUnitCode, coursecode`;
+// semesterNum
+  db.query(sql, [`${coursecode}`],
     (err, result) => {
       if (err) { res.send(err); }
       // debug(result);
@@ -499,6 +603,31 @@ exports.getSingle_CourseUnit = function getSingle_CourseUnit(req, res) {
       if (err) { res.send(err); }
       debug(result);
       req.semester = result;
+      return res.send(result);
+      // return next();
+    });
+};
+
+exports.get_CourseUnit_Reg = function get_CourseUnit_Reg(req, res) {
+  const coursecode = req.params.courseCode;
+  // eslint-disable-next-line prefer-destructuring
+  const semesterNum = req.params.semesterNum;
+
+  debug(`${coursecode}`, `${semesterNum}`);
+  // const intakedate = `${intake}`;
+  const sql = `SELECT 
+                courseUnitCode, 
+                courseUnitName,
+                courseCode,
+                semesterNum
+                FROM courseunits 
+              WHERE courseCode = ? && semesterNum = ?`;
+  db.query(sql,
+    [`${coursecode}`, `${semesterNum}`],
+    (err, result) => {
+      if (err) { res.send(err); }
+      debug(result);
+      // req.semester = result;
       return res.send(result);
       // return next();
     });
