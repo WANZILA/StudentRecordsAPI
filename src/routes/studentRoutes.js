@@ -1,36 +1,26 @@
 /* eslint-disable linebreak-style */
-// const bodyParser = require('body-parser');
 const express = require('express');
-// const debug = require('debug')('app:studentRoutes');
-// const mysql = require('mysql');
 
-// just returns the studentsController fn 
-const studentsController = require('../controller/studentsController');
+const router = express.Router();
 
-// const studentNav = [
-//   { link: '/addStudent', title: 'Add Student' },
-//   { link: '/deleteStudent', title: 'Delete Student' },
-//   { link: '/studentSearch', title: 'Search' }
-// ];
+const studentsController = require('../controller/studentsController2');
 
-function studentRouters(nav, title, pool) {
-  const studentRouter = express.Router();
-  const controller = studentsController(pool);
- 
-  studentRouter.route('/')
-    .post(controller.post)
-    .get(controller.get);
+// Student Routes
+// router.get('studentAPI/student/', studentsController.student_get_all);
+// router.get('studentAPI/student/:studentId', studentsController.student_get_One);
+// router.post('studentAPI/student/add', studentsController.student_post);
+// router.delete('studentAPI/student/:studentId', studentsController.student_delete);
+router.get('/', studentsController.student_get_all);
+// /studyprog/:studyProgramme
+router.get('/intakedate/:intakeDate/branch/:branchNum/studyprog/:studyProgramme', studentsController.student_get_all_Student_Intakes);
+// used in ther reg module of front end
+router.get('/reg', studentsController.get_all_StudyProgrammes);
 
-  studentRouter.route('/:studentid')
-    .all(controller.alls)
-    .get((req, res) => {
-      // res.json(req.student);
-      // using postman
-      res.send(req.student);
-    })
-    .patch(controller.patch)
-    .delete(controller.del);
+router.get('/:studentId', studentsController.student_get_One);
+router.post('/add', studentsController.student_post);
+// router.put('/update', studentsController.student_update);
+// router.patch('/update/:studentId', studentsController.student_update);
+router.patch('/:studentId', studentsController.student_update);
+router.delete('/:studentId', studentsController.student_delete);
 
-  return studentRouter;
-}
-module.exports = studentRouters;
+module.exports = router;

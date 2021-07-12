@@ -1,94 +1,73 @@
+/* eslint-disable quote-props */
+// import bodyParser from 'body-parser';
+
 const express = require('express');
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const mysql = require('mysql');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+// const flash = require('connect-flash');
+// const passport = require('passport');
 
 // custome variables
 const app = express();
 const port = process.env.PORT || 3000;
 
-const homeRouter = express.Router();
-const registryRouter = express.Router();
-
-// db connections
-const pool = mysql.createPool({
-  connectionLimit: 100,
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  // server: 'localhost',
-  database: 'studentRecords',
-  flags: '+IGNORE_SPACE'
-});
-
-// testing connection
-// eslint-disable-next-line prefer-arrow-callback
-pool.query('SELECT 1 + 1 AS solution', function qns(error, results, fields) {
-  if (error) {
-    return debug(error);
-  };
-  console.log('connected ');
-});
-
-// main navigation
-const nav = [
-  { link: '/home', title: 'Home' },
-  { link: '/admin', title: 'Admin' },
-  { link: '/registry', title: 'Registry' },
-  { link: '/structure', title: 'Structure' },
-  { link: '/lecturer', title: 'Lecturers' },
-  { link: '/student', title: 'Student' },
-  { link: '/communications', title: 'Communication' },
-  { link: '/payment', title: 'Payment' },
-  { link: '/library', title: 'Library' },
-  { link: '/report', title: 'Report' }
-];
-
-const title = { title: 'Student Records System' };
-const studentRouter = require('./src/routes/studentRoutes')(nav, title, pool);
-const adminRouter = require('./src/routes/adminRoutes')();
-
-
-app.use(cors());
-// making use of bodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
-// pulls json out of the post body and gives us the data
-app.use(bodyParser.json());
-// app.use(expressSanitized());
+const studentRouter = require('./src/routes/studentRoutes');
+const adminRouter = require('./src/routes/adminRoutes');
+const structureRouter = require('./src/routes/structureRoutes');
+const registrarRouter = require('./src/routes/registrarRoutes');
 
 app.use(morgan('tiny'));
-app.set('views', './src/views');
-app.set('view engine', 'ejs');
+app.use(cors(
+  {
+    // "origin": "*",
+    // "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    // "preflightContinue": false,
+    // "optionsSuccessStatus": 204
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  }
+));
+// pulls json out of the post body and gives us the data
+app.use(express.raw());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// homeRouter.route('/home')
-//   .get((req, res) => {
-//     res.send('hellow people');
-//   });
+app.use(cookieParser());
 
-// registryRouter.route('/registry')
-//   .get((req, res) => {
-//     res.send('reg hellow');
-//   });
+// sample
+app.use(session({
+  secret: 'studentrecords',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 15 }
+}));
 
-// app.use('/', homeRouter);
-// app.use('/', registryRouter);
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(flash());
+// require('./src/config/passport.js')(app);
+// app.set('views', './src/views');
+// app.set('view engine', 'ejs');
+
+// Date: 19/04/2021
 app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
+// app.use('/intake', intakeRouter);
+app.use('/structure', structureRouter);
+app.use('/registrar', registrarRouter);
+// app.use('/report', reportRouter);
+// app.use('/adminlogin', adminLoginRouter);
+// app.listen(port, () => {
+//   debug(`Running on port ${chalk.green(port)}`);
+// });
 
-app.get('/', (req, res) => {
-  // res.send('hellow');
-  // res.sendFile(path.join(__dirname, 'views/index.html'));
-  res.render(
-    'index',
-    {
-      nav,
-      title: 'Student Records System'
-    }
-  );
-});
+// app.use('/studentAPI/student', studentRouter);
 
 app.listen(port, () => {
   debug(`Running on port ${chalk.green(port)}`);

@@ -1,27 +1,17 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 
-const adminsController = require('../controller/adminsController');
+const router = express.Router();
 
-function adminRouters() {
-  const adminRouter = express.Router();
-  const controller = adminsController;
+const adminController = require('../controller/adminController');
 
-  adminRouter.route('/')
-    // .post(controller.post)
-    .get(controller.get);
+router.get('/', adminController.getAll);
+// route used in the registrar module to assign course unit
+router.get('/adminReg', adminController.getAllAdmins_Reg);
+router.get('/departcode/:departCode/branchnum/:branchNum', adminController.getSearchAdmins);
+router.get('/:adminId', adminController.getSingle);
+router.post('/add', adminController.adds);
+router.patch('/:adminId', adminController.updateOne);
+router.delete('/:adminId', adminController.deletes);
 
-  adminRouter.route('/add')
-    .post(controller.post);
-
-  adminRouter.route('/:adminId')
-    .all(controller.alls)
-    .get((req, res) => {
-      res.send(req.admin);
-    })
-    .patch(controller.patch)
-    .delete(controller.deletes);
-
-  return adminRouter;
-}
-module.exports = adminRouters;
+module.exports = router;
